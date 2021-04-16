@@ -28,7 +28,7 @@ class EditProfileViewModel(application: Application) : AndroidViewModel(applicat
 
     private val networkService = Networking.create(BuildConfig.BASE_URL)
     private var userProfileRepository: UserProfileRepository
-    private var  sharedPreferences =
+    private var sharedPreferences =
         application.getSharedPreferences(BuildConfig.PREF_NAME, Context.MODE_PRIVATE)
     private var appPreferences: AppPreferences
     private var token: String
@@ -82,7 +82,5 @@ class EditProfileViewModel(application: Application) : AndroidViewModel(applicat
         } catch (exception: Exception) {
             Log.e(TAG, exception.toString())
         }
-
     }
-
 }

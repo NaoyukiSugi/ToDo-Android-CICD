@@ -34,13 +34,11 @@ class ProfileFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
 
         observer()
-
-
     }
 
-    private fun observer(){
+    private fun observer() {
         viewModel.loading.observe(viewLifecycleOwner, Observer {
-            pb_profile.visibility =  if (it) View.VISIBLE else View.GONE
+            pb_profile.visibility = if (it) View.VISIBLE else View.GONE
         })
 
         viewModel.getUserProfile().observe(viewLifecycleOwner, Observer {
@@ -51,29 +49,26 @@ class ProfileFragment : Fragment() {
                 .load(it.profileImage)
                 .circleCrop()
                 .into(profileImage)
-
         })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.profile_edit_menu,menu)
+        inflater.inflate(R.menu.profile_edit_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             R.id.navigation_edit_profile ->
-                findNavController().navigate(ProfileFragmentDirections.actionNavigationProfileToEditProfileFragment(
-                    profileName.text.toString(),
-                    profileEmail.text.toString(),
-                    profileBio.text.toString(),
-                    viewModel.imageUrl.value.toString()
-                ))
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionNavigationProfileToEditProfileFragment(
+                        profileName.text.toString(),
+                        profileEmail.text.toString(),
+                        profileBio.text.toString(),
+                        viewModel.imageUrl.value.toString()
+                    )
+                )
         }
-
         return false
-
     }
-
-
 }

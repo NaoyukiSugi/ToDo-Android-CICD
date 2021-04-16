@@ -7,5 +7,4 @@ data class DeleteTaskRequest(
     val id: String,
     @SerializedName("user_id")
     val user_id: String
-){
-}
+)

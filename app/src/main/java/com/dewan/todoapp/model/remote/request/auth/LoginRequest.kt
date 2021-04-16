@@ -7,5 +7,4 @@ data class LoginRequest(
     val email: String,
     @SerializedName("password")
     val password: String
-) {
-}
+)

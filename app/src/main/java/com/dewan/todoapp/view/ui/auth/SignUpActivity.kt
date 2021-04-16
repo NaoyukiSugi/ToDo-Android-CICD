@@ -50,7 +50,7 @@ class SignUpActivity : AppCompatActivity() {
         val password = txt_password.text.toString()
         val confirmPassword = txt_confirm_password.text.toString()
 
-        if (name.isEmpty()){
+        if (name.isEmpty()) {
             alert {
                 isCancelable = false
                 title = getString(R.string.empty_user_name_title)
@@ -59,8 +59,7 @@ class SignUpActivity : AppCompatActivity() {
                     it.dismiss()
                 }
             }.show()
-        }
-        else if (!Validator.validateEmail(email)){
+        } else if (!Validator.validateEmail(email)) {
             alert {
                 isCancelable = false
                 title = getString(R.string.validator_title)
@@ -69,8 +68,7 @@ class SignUpActivity : AppCompatActivity() {
                     it.dismiss()
                 }
             }.show()
-        }
-        else if (!Validator.validatePassword(password)){
+        } else if (!Validator.validatePassword(password)) {
             alert {
                 isCancelable = false
                 title = getString(R.string.validator_title)
@@ -79,8 +77,7 @@ class SignUpActivity : AppCompatActivity() {
                     it.dismiss()
                 }
             }.show()
-        }
-        else if (!Validator.validatePassword(confirmPassword)){
+        } else if (!Validator.validatePassword(confirmPassword)) {
             alert {
                 isCancelable = false
                 title = getString(R.string.validator_title)
@@ -89,8 +86,7 @@ class SignUpActivity : AppCompatActivity() {
                     it.dismiss()
                 }
             }.show()
-        }
-        else if (password !=  confirmPassword){
+        } else if (password != confirmPassword) {
             alert {
                 isCancelable = false
                 title = getString(R.string.error_confirm_password_title)
@@ -99,8 +95,7 @@ class SignUpActivity : AppCompatActivity() {
                     it.dismiss()
                 }
             }.show()
-        }
-        else {
+        } else {
             val signUpData = RegisterRequest(name, email, password, confirmPassword)
 
             signUp(signUpData)
@@ -182,17 +177,16 @@ class SignUpActivity : AppCompatActivity() {
         viewModel.register(signUpData)
     }
 
-    private fun observer(){
+    private fun observer() {
         viewModel.isError.observe(this, Observer {
             errorDialog(it)
         })
 
         viewModel.isSuccess.observe(this, Observer {
             it?.run {
-                if (it){
+                if (it) {
                     successDialog()
-                }
-                else {
+                } else {
                     unSuccessFulDialog()
                 }
             }
@@ -205,35 +199,35 @@ class SignUpActivity : AppCompatActivity() {
     }
 
 
-    private fun successDialog(){
+    private fun successDialog() {
         alert {
             title = getString(R.string.title_successful_signup)
             message = getString(R.string.msg_signup_successful)
             isCancelable = false
-            positiveButton(getString(R.string.btn_ok)){dialog->
+            positiveButton(getString(R.string.btn_ok)) { dialog ->
                 finish()
                 dialog.dismiss()
             }
         }.show()
     }
 
-    private fun unSuccessFulDialog(){
+    private fun unSuccessFulDialog() {
         alert {
             title = getString(R.string.title_un_successful_dialog)
             message = getString(R.string.msg_add_post_un_successful)
             isCancelable = false
-            positiveButton(getString(R.string.btn_ok)){dialog->
+            positiveButton(getString(R.string.btn_ok)) { dialog ->
                 dialog.dismiss()
             }
         }.show()
     }
 
-    private fun errorDialog(errorMsg: String){
+    private fun errorDialog(errorMsg: String) {
         alert {
             title = getString(R.string.title_error_dialog)
             message = errorMsg
             isCancelable = false
-            positiveButton(getString(R.string.btn_ok)){dialog->
+            positiveButton(getString(R.string.btn_ok)) { dialog ->
                 dialog.dismiss()
             }
         }.show()

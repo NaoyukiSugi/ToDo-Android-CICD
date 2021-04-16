@@ -58,12 +58,9 @@ class EditProfileFragment : Fragment() {
 
             })
         }
-
-
-
     }
 
-    private fun observe(){
+    private fun observe() {
         viewModel.nameField.observe(viewLifecycleOwner, Observer {
             editProfileName.setText(it)
         })
@@ -86,10 +83,9 @@ class EditProfileFragment : Fragment() {
         viewModel.profile.observe(viewLifecycleOwner, Observer {
             val isSuccess = it?.success
             isSuccess?.run {
-                if (isSuccess){
+                if (isSuccess) {
                     successDialog()
-                }
-                else {
+                } else {
                     errorDialog()
                 }
             }
@@ -97,11 +93,14 @@ class EditProfileFragment : Fragment() {
 
     }
 
-    private fun pickImage(){
+    private fun pickImage() {
         ImagePicker.with(this)
             .crop(1f, 1f)               //Crop Square image(Optional)
             .compress(1024)         //Final image size will be less than 1 MB(Optional)
-            .maxResultSize(400, 400)  //Final image resolution will be less than 1080 x 1080(Optional)
+            .maxResultSize(
+                400,
+                400
+            )  //Final image resolution will be less than 1080 x 1080(Optional)
             .start { resultCode, data ->
                 if (resultCode == Activity.RESULT_OK) {
                     //Image Uri will not be null for RESULT_OK
@@ -117,7 +116,7 @@ class EditProfileFragment : Fragment() {
                     viewModel.imageField.value = file
 
                     //You can also get File Path from intent
-                    val filePath:String? = ImagePicker.getFilePath(data)
+                    val filePath: String? = ImagePicker.getFilePath(data)
 
                 } else if (resultCode == ImagePicker.RESULT_ERROR) {
                     Toast.makeText(context, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
@@ -127,28 +126,26 @@ class EditProfileFragment : Fragment() {
             }
     }
 
-    private fun successDialog(){
+    private fun successDialog() {
         alert {
             isCancelable = false
             title = getString(R.string.alert_success_title)
             message = getString(R.string.alert_edit_success_msg)
-            positiveButton("OK"){
+            positiveButton("OK") {
                 it.dismiss()
                 findNavController().navigate(EditProfileFragmentDirections.actionEditProfileFragmentToNavigationHome())
             }
         }.show()
     }
 
-    private fun errorDialog(){
+    private fun errorDialog() {
         alert {
             isCancelable = false
             title = getString(R.string.alert_error_title)
             message = getString(R.string.alert_error_msg)
-            positiveButton("OK"){
+            positiveButton("OK") {
                 it.dismiss()
             }
         }.show()
     }
-
-
 }

@@ -22,6 +22,7 @@ class SplashActivity : AppCompatActivity() {
     companion object {
         const val TAG = "SplashActivity"
     }
+
     private lateinit var viewModel: SplashViewModel
     private val mContext = this
 
@@ -41,8 +42,6 @@ class SplashActivity : AppCompatActivity() {
         }
 
         //Timber.e(RuntimeException("Test Crash"))
-
-
     }
 
     suspend fun checkNetwork() {
@@ -53,43 +52,39 @@ class SplashActivity : AppCompatActivity() {
 
         if (status) {
 
-            withContext(Main){
+            withContext(Main) {
                 viewModel.token.observe(mContext, Observer {
 
-                    if (it.isNullOrEmpty()){
+                    if (it.isNullOrEmpty()) {
                         startActivity(intentFor<LoginActivity>())
-                    }
-                    else {
+                    } else {
                         viewModel.validateToken().observe(this@SplashActivity, Observer {
 
                             if (it.code() == 200) {
 
                                 val msg = it.body()
 
-                                if (msg?.message == "true"){
+                                if (msg?.message == "true") {
                                     finish()
                                     startActivity(intentFor<MainActivity>())
-                                }
-                                else {
+                                } else {
                                     startActivity(intentFor<LoginActivity>())
                                 }
                             }
                         })
                     }
                 })
-
-
             }
         } else {
 
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
 
                 showAlertDialog()
             }
         }
     }
 
-    fun  showAlertDialog(){
+    fun showAlertDialog() {
         alert {
             isCancelable = false
             title = getString(R.string.error_no_internet)

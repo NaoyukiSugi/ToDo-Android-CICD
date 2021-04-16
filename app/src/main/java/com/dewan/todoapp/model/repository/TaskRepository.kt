@@ -16,12 +16,12 @@ class TaskRepository(
 
     //suspend fun getTaskById(token: String, maxId: String) = networkService.getTAskById(token, maxId)
 
-    suspend fun getTaskById(token: String, maxId: String) : ResultSet<List<TaskEntity>> {
+    suspend fun getTaskById(token: String, maxId: String): ResultSet<List<TaskEntity>> {
 
         try {
-            val response =  networkService.getTaskById(token, maxId)
-            if (response.isSuccessful){
-                val result = response.body()?.map {taskResponse ->
+            val response = networkService.getTaskById(token, maxId)
+            if (response.isSuccessful) {
+                val result = response.body()?.map { taskResponse ->
                     TaskEntity(
                         taskId = taskResponse.id,
                         title = taskResponse.title,
@@ -36,37 +36,39 @@ class TaskRepository(
 
                 return ResultSet.Success(result)
 
-            }
-            else {
-                return  when (response.code()) {
+            } else {
+                return when (response.code()) {
                     HttpURLConnection.HTTP_UNAUTHORIZED -> {
                         ResultSet.Error(errorMsg = R.string.error_code_401, code = response.code())
                     }
                     HttpURLConnection.HTTP_BAD_REQUEST -> {
-                        ResultSet.Error(errorMsg = R.string.error_code_400,code = response.code())
+                        ResultSet.Error(errorMsg = R.string.error_code_400, code = response.code())
                     }
                     HttpURLConnection.HTTP_NOT_FOUND -> {
-                        ResultSet.Error(errorMsg = R.string.error_code_404,code = response.code())
+                        ResultSet.Error(errorMsg = R.string.error_code_404, code = response.code())
                     }
                     HttpURLConnection.HTTP_SERVER_ERROR -> {
-                        ResultSet.Error(errorMsg = R.string.error_code_500,code = response.code())
+                        ResultSet.Error(errorMsg = R.string.error_code_500, code = response.code())
                     }
                     else -> {
-                        ResultSet.Error(errorMsg = R.string.error_code_unknown,code = response.code())
+                        ResultSet.Error(
+                            errorMsg = R.string.error_code_unknown,
+                            code = response.code()
+                        )
                     }
                 }
 
             }
-        }
-        catch (e: Exception){
-           return ResultSet.Error(e)
+        } catch (e: Exception) {
+            return ResultSet.Error(e)
         }
 
     }
 
     suspend fun insert(taskEntity: TaskEntity) = appDatabase.taskDao().insert(taskEntity)
 
-    suspend fun insertMany(taskEntity: List<TaskEntity>) = appDatabase.taskDao().insertMany(taskEntity)
+    suspend fun insertMany(taskEntity: List<TaskEntity>) =
+        appDatabase.taskDao().insertMany(taskEntity)
 
     suspend fun update(taskEntity: TaskEntity) = appDatabase.taskDao().update(taskEntity)
 
@@ -74,23 +76,21 @@ class TaskRepository(
 
     //suspend fun getAllTaskFromDb() = appDatabase.taskDao().getAllTaskFromDd()
 
-    suspend fun getAllTaskFromDb() : ResultSet<List<TaskEntity>> {
+    suspend fun getAllTaskFromDb(): ResultSet<List<TaskEntity>> {
 
-        return  try {
+        return try {
             ResultSet.Success(appDatabase.taskDao().getAllTaskFromDd())
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             return ResultSet.Error(e)
         }
     }
 
     //suspend fun getMaxId() = appDatabase.taskDao().getMaxTaskId()
 
-    suspend fun getMaxId() : ResultSet<Int> {
-        return  try {
+    suspend fun getMaxId(): ResultSet<Int> {
+        return try {
             ResultSet.Success(appDatabase.taskDao().getMaxTaskId())
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             return ResultSet.Error(e)
         }
     }

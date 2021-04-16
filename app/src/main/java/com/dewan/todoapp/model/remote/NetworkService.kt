@@ -75,7 +75,5 @@ interface NetworkService {
         @Header("Authorization") token: String,
         @Body deleteTaskRequest: DeleteTaskRequest
     ): Response<TaskResponse>
-
-
-
 }
+

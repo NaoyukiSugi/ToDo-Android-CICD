@@ -49,7 +49,6 @@ class EditTaskViewModel(application: Application) : AndroidViewModel(application
     val isError: MutableLiveData<String> = MutableLiveData()
 
     init {
-
         editTaskRepository =
             EditTaskRepository(networkService, AppDatabase.getInstance(application))
 
@@ -57,7 +56,6 @@ class EditTaskViewModel(application: Application) : AndroidViewModel(application
         token = appPreferences.getAccessToken().toString()
         userId.value = appPreferences.getUserId()
     }
-
 
     fun getIndexFromTaskList() {
         index.value = taskList.indexOf(status.value)
@@ -99,9 +97,7 @@ class EditTaskViewModel(application: Application) : AndroidViewModel(application
                 isError.postValue(exception.toString())
                 loading.postValue(false)
             }
-
         }
-
     }
 
     /*
@@ -139,6 +135,4 @@ class EditTaskViewModel(application: Application) : AndroidViewModel(application
             Log.e(TAG, error.toString())
         }
     }
-
-
 }

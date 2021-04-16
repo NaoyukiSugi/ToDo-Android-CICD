@@ -24,7 +24,8 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
 
     private val networkService = Networking.create(BuildConfig.BASE_URL)
     private var addTaskRepository: AddTaskRepository
-    private var sharesPreferences = application.getSharedPreferences(BuildConfig.PREF_NAME,Context.MODE_PRIVATE)
+    private var sharesPreferences =
+        application.getSharedPreferences(BuildConfig.PREF_NAME, Context.MODE_PRIVATE)
     private var appPreferences: AppPreferences
     private var token: String = ""
     val userId: MutableLiveData<Int> = MutableLiveData()
@@ -39,29 +40,19 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
         userId.value = appPreferences.getUserId()
     }
 
-
     fun addTask(addTaskRequest: AddTaskRequest) = liveData {
         try {
             progress.value = true
-
-            val data =  addTaskRepository.addTask(token,addTaskRequest)
+            val data = addTaskRepository.addTask(token, addTaskRequest)
             isSuccess.value = data.code() == 201
             emit(isSuccess.value)
-
             progress.value = false
-
-
-        }
-        catch (httpException: HttpException){
-            Log.e(TAG,httpException.toString())
+        } catch (httpException: HttpException) {
+            Log.e(TAG, httpException.toString())
             isError.value = httpException.toString()
-
-        }
-        catch (exception: Exception){
-            Log.e(TAG,exception.toString())
+        } catch (exception: Exception) {
+            Log.e(TAG, exception.toString())
             isError.value = exception.toString()
         }
-
-
     }
 }

@@ -16,7 +16,7 @@ object Validator {
     )
 
     fun validateEmail(email: String): Boolean {
-        return  when {
+        return when {
             email.isBlank() ->
                 false
             !EMAIL_ADDRESS.matcher(email).matches() ->

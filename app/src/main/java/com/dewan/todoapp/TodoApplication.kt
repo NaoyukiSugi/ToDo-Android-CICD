@@ -31,7 +31,7 @@ class TodoApplication : Application() {
         )
     }
 
-    private fun setupAppCenter(){
+    private fun setupAppCenter() {
         AppCenter.start(
             this, "0bc0f90a-a9c2-4d09-8bf3-3dfb683d92aa",
             Analytics::class.java, Crashes::class.java

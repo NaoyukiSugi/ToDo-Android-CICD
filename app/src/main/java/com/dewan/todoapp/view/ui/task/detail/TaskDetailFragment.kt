@@ -48,14 +48,16 @@ class TaskDetailFragment : Fragment() {
         observerData()
 
         fb_edit.setOnClickListener {
-            findNavController().navigate(TaskDetailFragmentDirections.actionTaskDetailFragmentToEditTaskFragment(
-                viewModel.taskId.value.toString(),
-                viewModel.title.value.toString(),
-                viewModel.body.value.toString(),
-                viewModel.status.value.toString(),
-                viewModel.idField.value.toString(),
-                viewModel.note.value.toString()
-            ))
+            findNavController().navigate(
+                TaskDetailFragmentDirections.actionTaskDetailFragmentToEditTaskFragment(
+                    viewModel.taskId.value.toString(),
+                    viewModel.title.value.toString(),
+                    viewModel.body.value.toString(),
+                    viewModel.status.value.toString(),
+                    viewModel.idField.value.toString(),
+                    viewModel.note.value.toString()
+                )
+            )
         }
 
         fb_delete.setOnClickListener {
@@ -63,7 +65,7 @@ class TaskDetailFragment : Fragment() {
         }
     }
 
-    private fun observerData(){
+    private fun observerData() {
         viewModel.idField.observe(viewLifecycleOwner, Observer {
 
         })
@@ -101,10 +103,9 @@ class TaskDetailFragment : Fragment() {
         })
 
         viewModel.isDeleted.observe(viewLifecycleOwner, Observer {
-            if (it){
+            if (it) {
                 deleteSuccessDialog()
-            }
-            else {
+            } else {
                 deleteUnSuccessDialog()
             }
         })
@@ -112,42 +113,41 @@ class TaskDetailFragment : Fragment() {
     }
 
 
-    private fun deleteConfirmDialog(){
+    private fun deleteConfirmDialog() {
         alert {
             isCancelable = false
             title = getString(R.string.alert_delete_task_title)
             message = getString(R.string.alert_delete_msg)
-            positiveButton("YES"){
+            positiveButton("YES") {
                 it.dismiss()
                 viewModel.deleteTask()
             }
-            negativeButton("NO"){
+            negativeButton("NO") {
                 it.dismiss()
             }
         }.show()
     }
 
-    private fun deleteSuccessDialog(){
+    private fun deleteSuccessDialog() {
         alert {
             isCancelable = false
             title = getString(R.string.alert_delete_task_success_title)
             message = getString(R.string.alert_delete_task_success_msg)
-            positiveButton("OK"){
+            positiveButton("OK") {
                 it.dismiss()
                 findNavController().navigate(TaskDetailFragmentDirections.actionTaskDetailFragmentToNavigationHome())
             }
         }.show()
     }
 
-    private fun deleteUnSuccessDialog(){
+    private fun deleteUnSuccessDialog() {
         alert {
             isCancelable = false
             title = getString(R.string.alert_delete_task_error_title)
             message = getString(R.string.alert_delete_task_error_msg)
-            positiveButton("OK"){
+            positiveButton("OK") {
                 it.dismiss()
             }
         }.show()
     }
-
 }

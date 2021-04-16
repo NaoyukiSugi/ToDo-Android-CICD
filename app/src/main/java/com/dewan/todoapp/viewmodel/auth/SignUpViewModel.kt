@@ -26,15 +26,13 @@ class SignUpViewModel : ViewModel() {
     val isError: MutableLiveData<String> = MutableLiveData()
     val loading: MutableLiveData<Boolean> = MutableLiveData()
 
-    fun register(registerRequest: RegisterRequest){
-        loading.value =  true
+    fun register(registerRequest: RegisterRequest) {
+        loading.value = true
         viewModelScope.launch(IO) {
             try {
                 val data = registerRepository.register(registerRequest)
                 isSuccess.postValue(data.code() == 201)
-
                 loading.postValue(false)
-
 
             } catch (httpException: HttpException) {
                 Log.e(TAG, httpException.toString())
@@ -49,5 +47,4 @@ class SignUpViewModel : ViewModel() {
 
         }
     }
-
 }

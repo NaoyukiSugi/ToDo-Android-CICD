@@ -5,5 +5,6 @@ import com.dewan.todoapp.model.remote.request.auth.RegisterRequest
 
 class RegisterRepository(private val networkService: NetworkService) {
 
-    suspend fun register(registerRequest: RegisterRequest) = networkService.register(registerRequest)
+    suspend fun register(registerRequest: RegisterRequest) =
+        networkService.register(registerRequest)
 }
