@@ -37,7 +37,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     val isError: MutableLiveData<String> = MutableLiveData()
     val errorMsg: MutableLiveData<String> = MutableLiveData()
 
-
     init {
         appPreferences = AppPreferences(sharesPreferences)
         loginRepository = LoginRepository(networkService, appPreferences)
@@ -74,15 +73,12 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 isLoading.postValue(false)
             }
         }
-
     }
 
-    private fun saveUserPref(loginResponse: LoginResponse){
-
+    private fun saveUserPref(loginResponse: LoginResponse) {
         viewModelScope.launch {
             loginRepository.saveUserDetail(loginResponse)
         }
-
     }
 
     /*
@@ -122,5 +118,4 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         emit(data)
     }
     */
-
 }

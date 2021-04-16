@@ -60,7 +60,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         getMaxIdFromDb()
     }
 
-
     fun getAllTask() = liveData {
         try {
             progress.postValue(true)
@@ -90,7 +89,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
             }
             emit(taskList.value)
-
             progress.postValue(false)
 
         } catch (httpException: HttpException) {
@@ -101,7 +99,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             Log.e(TAG, exception.toString())
             isError.value = exception.toString()
         }
-
     }
 
     private fun getMaxIdFromDb() {
@@ -197,10 +194,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 Timber.e(error.message.toString())
             }
         }
-
-
-
-
     }
 
     /*
@@ -230,8 +223,5 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
         }
-
     }
-
-
 }

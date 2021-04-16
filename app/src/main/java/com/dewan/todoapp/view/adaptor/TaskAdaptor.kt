@@ -54,8 +54,8 @@ class TaskAdaptor(private var taskList: List<TaskEntity>) :
         this.taskCallBack = taskCallBack
     }
 
-    fun setDetail(newList: List<TaskEntity>){
-        val diffResult = DiffUtil.calculateDiff(TaskDiffUtil(taskList,newList))
+    fun setDetail(newList: List<TaskEntity>) {
+        val diffResult = DiffUtil.calculateDiff(TaskDiffUtil(taskList, newList))
         taskList = newList
         diffResult.dispatchUpdatesTo(this)
     }
@@ -96,7 +96,7 @@ class TaskAdaptor(private var taskList: List<TaskEntity>) :
     class TaskDiffUtil(
         var oldTaskList: List<TaskEntity>,
         var newTaskList: List<TaskEntity>
-    ): DiffUtil.Callback() {
+    ) : DiffUtil.Callback() {
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             return oldTaskList[oldItemPosition].id == newTaskList[newItemPosition].id
@@ -107,7 +107,7 @@ class TaskAdaptor(private var taskList: List<TaskEntity>) :
         override fun getNewListSize(): Int = newTaskList.size
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return  oldTaskList[oldItemPosition] == newTaskList[newItemPosition]
+            return oldTaskList[oldItemPosition] == newTaskList[newItemPosition]
         }
 
     }

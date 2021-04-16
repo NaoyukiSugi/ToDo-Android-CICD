@@ -50,7 +50,6 @@ class EditTaskFragment : Fragment() {
         viewModel.note.value = args.note
         viewModel.status.value = args.taskStatus
 
-
         fab_editTask.setOnClickListener {
             viewModel.status.value = edit_spinner_task.selectedItem.toString()
             viewModel.title.value = edit_title.text.toString()
@@ -59,13 +58,10 @@ class EditTaskFragment : Fragment() {
             viewModel.editTask()
         }
 
-
         observeData()
-
-
     }
 
-    private fun observeData(){
+    private fun observeData() {
         viewModel.id.observe(viewLifecycleOwner, Observer {
 
         })
@@ -95,10 +91,9 @@ class EditTaskFragment : Fragment() {
         })
 
         viewModel.isSuccess.observe(viewLifecycleOwner, Observer {
-            if (it){
+            if (it) {
                 successDialog()
-            }
-            else {
+            } else {
                 unSuccessFulDialog()
             }
         })
@@ -108,40 +103,38 @@ class EditTaskFragment : Fragment() {
         })
     }
 
-    private fun successDialog(){
+    private fun successDialog() {
         alert {
             isCancelable = false
             title = getString(R.string.alert_success_title)
             message = getString(R.string.alert_edit_success_msg)
-            positiveButton("OK"){
+            positiveButton("OK") {
                 it.dismiss()
                 findNavController().navigate(EditTaskFragmentDirections.actionEditTaskFragmentToNavigationHome())
             }
         }.show()
     }
 
-    private fun unSuccessFulDialog(){
+    private fun unSuccessFulDialog() {
         alert {
             title = getString(R.string.title_un_successful_dialog)
             message = getString(R.string.msg_add_post_un_successful)
             isCancelable = false
-            positiveButton(getString(R.string.btn_ok)){dialog->
+            positiveButton(getString(R.string.btn_ok)) { dialog ->
                 dialog.dismiss()
             }
         }.show()
     }
 
-    private fun errorDialog(errorMsg: String){
+    private fun errorDialog(errorMsg: String) {
         alert {
             title = getString(R.string.title_error_dialog)
             message = errorMsg
             isCancelable = false
-            positiveButton(getString(R.string.btn_ok)){dialog->
+            positiveButton(getString(R.string.btn_ok)) { dialog ->
                 dialog.dismiss()
             }
         }.show()
 
     }
-
-
 }

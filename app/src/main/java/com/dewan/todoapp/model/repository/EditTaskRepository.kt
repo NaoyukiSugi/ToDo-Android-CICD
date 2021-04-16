@@ -18,5 +18,5 @@ class EditTaskRepository(
     ): Response<EditTaskResponse> =
         networkService.editTask(token, editTaskRequest)
 
-    suspend fun updateTask(taskEntity: TaskEntity)=  appDatabase.taskDao().update(taskEntity)
+    suspend fun updateTask(taskEntity: TaskEntity) = appDatabase.taskDao().update(taskEntity)
 }

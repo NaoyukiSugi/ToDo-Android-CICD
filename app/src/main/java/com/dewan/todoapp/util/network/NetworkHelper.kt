@@ -55,6 +55,4 @@ object NetworkHelper {
 
         return NetworkError(response.code(), message)
     }
-
-
 }

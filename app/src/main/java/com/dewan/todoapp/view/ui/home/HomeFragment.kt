@@ -38,6 +38,7 @@ class HomeFragment : Fragment(), TaskCallBack {
     private lateinit var binding: HomeFragmentBinding
     private lateinit var recycleView: RecyclerView
     private lateinit var mLayoutManager: RecyclerView.LayoutManager
+
     //private lateinit var mTaskAdaptor: TaskAdaptor
     //private lateinit var mTaskAdaptorAsyncListDiffer: TaskAdaptorAsyncListDiffer
     private lateinit var mTaskListAdaptor: TaskListAdaptor
@@ -46,7 +47,7 @@ class HomeFragment : Fragment(), TaskCallBack {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater,R.layout.home_fragment,container,false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.home_fragment, container, false)
 
         //recycle view
         recycleView = binding.taskRecyclerView
@@ -76,27 +77,28 @@ class HomeFragment : Fragment(), TaskCallBack {
 
     override fun onTaskClick(view: View, position: Int, isLongClick: Boolean) {
 
-        if (isLongClick ){
+        if (isLongClick) {
             Timber.e("Position: $position is a long click")
-        }
-        else {
+        } else {
             val data = viewModel.taskListFromDb.value?.get(position)
-            findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToTaskDetailFragment(
-                data?.createdAt.toString(),
-                data?.title.toString(),
-                data?.body.toString(),
-                data?.status.toString(),
-                data?.userId.toString(),
-                data?.bg_color.toString(),
-                data?.id.toString(),
-                data?.taskId.toString(),
-                data?.note.toString()
-            ))
+            findNavController().navigate(
+                HomeFragmentDirections.actionNavigationHomeToTaskDetailFragment(
+                    data?.createdAt.toString(),
+                    data?.title.toString(),
+                    data?.body.toString(),
+                    data?.status.toString(),
+                    data?.userId.toString(),
+                    data?.bg_color.toString(),
+                    data?.id.toString(),
+                    data?.taskId.toString(),
+                    data?.note.toString()
+                )
+            )
             Timber.e("Position: $position is a single click")
         }
     }
 
-    private fun observer(){
+    private fun observer() {
         viewModel.isError.observe(viewLifecycleOwner, Observer {
             errorDialog(it)
         })
@@ -124,20 +126,20 @@ class HomeFragment : Fragment(), TaskCallBack {
         })
     }
 
-    private fun errorDialog(errorMsg: String){
+    private fun errorDialog(errorMsg: String) {
         alert {
             title = getString(R.string.title_error_dialog)
             message = errorMsg
             isCancelable = false
-            positiveButton(getString(R.string.btn_ok)){dialog->
+            positiveButton(getString(R.string.btn_ok)) { dialog ->
                 dialog.dismiss()
             }
         }.show()
 
     }
 
-    private fun showSnackBarWithResourceId(resId: Int){
-        Snackbar.make(requireView(),getString(resId), Snackbar.LENGTH_INDEFINITE)
+    private fun showSnackBarWithResourceId(resId: Int) {
+        Snackbar.make(requireView(), getString(resId), Snackbar.LENGTH_INDEFINITE)
             .apply {
                 setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.red))
                     .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
@@ -149,8 +151,8 @@ class HomeFragment : Fragment(), TaskCallBack {
             }
     }
 
-    private fun showSnackBarWithString(msg: String){
-        Snackbar.make(requireView(),msg, Snackbar.LENGTH_INDEFINITE)
+    private fun showSnackBarWithString(msg: String) {
+        Snackbar.make(requireView(), msg, Snackbar.LENGTH_INDEFINITE)
             .apply {
                 setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.red))
                     .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
@@ -161,6 +163,4 @@ class HomeFragment : Fragment(), TaskCallBack {
                     .show()
             }
     }
-
-
 }

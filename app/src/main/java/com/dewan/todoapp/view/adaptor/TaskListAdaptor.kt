@@ -14,7 +14,7 @@ import com.dewan.todoapp.model.remote.response.todo.TaskResponse
 import timber.log.Timber
 
 class TaskListAdaptor :
-    ListAdapter<TaskEntity,TaskListAdaptor.ViewHolder>(TaskDiffUtilItemCallback()) {
+    ListAdapter<TaskEntity, TaskListAdaptor.ViewHolder>(TaskDiffUtilItemCallback()) {
 
     private lateinit var taskCallBack: TaskCallBack
 
@@ -27,7 +27,7 @@ class TaskListAdaptor :
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int  = currentList.size
+    override fun getItemCount(): Int = currentList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data: TaskEntity = currentList[position]
@@ -88,13 +88,11 @@ class TaskListAdaptor :
     class TaskDiffUtilItemCallback : DiffUtil.ItemCallback<TaskEntity>() {
 
         override fun areItemsTheSame(oldItem: TaskEntity, newItem: TaskEntity): Boolean {
-            return  oldItem.id == newItem.id
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: TaskEntity, newItem: TaskEntity): Boolean {
-            return  oldItem == newItem
+            return oldItem == newItem
         }
-
-
     }
 }

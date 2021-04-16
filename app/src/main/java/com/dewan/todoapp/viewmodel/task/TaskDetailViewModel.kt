@@ -24,10 +24,10 @@ class TaskDetailViewModel(application: Application) : AndroidViewModel(applicati
         const val TAG = "TaskDetailViewModel"
     }
 
-
     private val networkService = Networking.create(BuildConfig.BASE_URL)
     private lateinit var deleteTaskRepository: DeleteTaskRepository
-    private var sharesPreferences = application.getSharedPreferences(BuildConfig.PREF_NAME, Context.MODE_PRIVATE)
+    private var sharesPreferences =
+        application.getSharedPreferences(BuildConfig.PREF_NAME, Context.MODE_PRIVATE)
     private var appPreferences: AppPreferences
     private var userId: String
     private var token: String = ""
@@ -36,69 +36,65 @@ class TaskDetailViewModel(application: Application) : AndroidViewModel(applicati
     val taskId: MutableLiveData<String> = MutableLiveData()
     val dataTime: MutableLiveData<String> = MutableLiveData()
     val title: MutableLiveData<String> = MutableLiveData()
-    val body : MutableLiveData<String> = MutableLiveData()
-    val note : MutableLiveData<String> = MutableLiveData()
-    val status : MutableLiveData<String> = MutableLiveData()
-    val userIdField : MutableLiveData<String> = MutableLiveData()
-    val bgColor : MutableLiveData<String> = MutableLiveData()
+    val body: MutableLiveData<String> = MutableLiveData()
+    val note: MutableLiveData<String> = MutableLiveData()
+    val status: MutableLiveData<String> = MutableLiveData()
+    val userIdField: MutableLiveData<String> = MutableLiveData()
+    val bgColor: MutableLiveData<String> = MutableLiveData()
     val isValidUser: MutableLiveData<Boolean> = MutableLiveData()
     val isDeleted: MutableLiveData<Boolean> = MutableLiveData()
 
-
     init {
-        deleteTaskRepository = DeleteTaskRepository(networkService, AppDatabase.getInstance(application))
+        deleteTaskRepository =
+            DeleteTaskRepository(networkService, AppDatabase.getInstance(application))
         appPreferences = AppPreferences(sharesPreferences)
         userId = appPreferences.getUserId().toString()
         token = appPreferences.getAccessToken().toString()
     }
 
-
-
-    fun checkUserId(){
+    fun checkUserId() {
         try {
             isValidUser.value = userIdField.value == userId
-        }
-        catch (httpException: HttpException){
-            Log.e(TAG,httpException.toString())
+        } catch (httpException: HttpException) {
+            Log.e(TAG, httpException.toString())
 
+        } catch (exception: Exception) {
+            Log.e(TAG, exception.toString())
         }
-        catch (exception: Exception){
-            Log.e(TAG,exception.toString())
-        }
-
     }
 
-    fun deleteTask(){
+    fun deleteTask() {
         viewModelScope.launch {
-           val response = deleteTaskRepository.deleteTaskFromApi(token, DeleteTaskRequest(taskId.value!!,userId))
+            val response = deleteTaskRepository.deleteTaskFromApi(
+                token,
+                DeleteTaskRequest(taskId.value!!, userId)
+            )
 
-            if (response.code() == 200){
+            if (response.code() == 200) {
 
                 response.body()?.run {
-                     val result = deleteTaskRepository.deleteTaskFromDb(TaskEntity(
-                         id = idField.value!!.toLong(),
-                        taskId = this.id,
-                        title = this.title,
-                        body = this.body,
-                        status = this.status,
-                        userId = this.userId,
-                        createdAt = this.createdAt,
-                        updatedAt = this.updatedAt
+                    val result = deleteTaskRepository.deleteTaskFromDb(
+                        TaskEntity(
+                            id = idField.value!!.toLong(),
+                            taskId = this.id,
+                            title = this.title,
+                            body = this.body,
+                            status = this.status,
+                            userId = this.userId,
+                            createdAt = this.createdAt,
+                            updatedAt = this.updatedAt
 
-                    ))
+                        )
+                    )
 
-                    if (result >= 1){
+                    if (result >= 1) {
                         isDeleted.postValue(true)
                         Log.d(TAG, "Delete row: $result")
-                    }
-                    else {
+                    } else {
                         isDeleted.postValue(false)
                         Log.d(TAG, "Delete row was a error.")
                     }
-
-
                 }
-
             }
         }
     }

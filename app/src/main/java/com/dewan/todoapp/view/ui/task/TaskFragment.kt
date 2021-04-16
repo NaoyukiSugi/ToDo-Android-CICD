@@ -24,7 +24,7 @@ class TaskFragment : Fragment() {
 
     private lateinit var viewModel: TaskViewModel
     private val taskList: ArrayList<String> = ArrayList()
-    private  var userId: Int = 0
+    private var userId: Int = 0
     private lateinit var v: View
 
     override fun onCreateView(
@@ -36,7 +36,7 @@ class TaskFragment : Fragment() {
         resources.getStringArray(R.array.task_status_list).toCollection(taskList)
 
 
-        v.fab_addTask.setOnClickListener{
+        v.fab_addTask.setOnClickListener {
             prepareAddTask(v)
         }
 
@@ -51,41 +51,35 @@ class TaskFragment : Fragment() {
         })
 
         observeProgressBar(v)
-
     }
 
-    private fun prepareAddTask(view: View){
+    private fun prepareAddTask(view: View) {
         val title = view.txt_title.text.toString()
         val body = view.txt_body.text.toString()
         val note = view.txt_note.text.toString()
-        val status =  view.spinner_task.selectedItem.toString()
+        val status = view.spinner_task.selectedItem.toString()
 
-        val addTaskRequest = AddTaskRequest(userId,title,body,note,status)
+        val addTaskRequest = AddTaskRequest(userId, title, body, note, status)
         addTask(addTaskRequest)
-
     }
 
-    private fun addTask(addTaskRequest: AddTaskRequest){
+    private fun addTask(addTaskRequest: AddTaskRequest) {
 
         viewModel.addTask(addTaskRequest).observe(viewLifecycleOwner, Observer {
-            if (it!!){
+            if (it!!) {
                 successDialog()
-            }
-            else {
+            } else {
                 unSuccessFulDialog()
             }
         })
-
-
     }
 
-    private fun observeProgressBar(view: View){
+    private fun observeProgressBar(view: View) {
         viewModel.progress.observe(viewLifecycleOwner, Observer {
 
-            if (it){
+            if (it) {
                 view.progressBar.visibility = View.VISIBLE
-            }
-            else {
+            } else {
                 view.progressBar.visibility = View.GONE
             }
         })
@@ -95,12 +89,12 @@ class TaskFragment : Fragment() {
         })
     }
 
-    private fun successDialog(){
+    private fun successDialog() {
         alert {
             title = getString(R.string.title_success_dialog)
             message = getString(R.string.msg_add_post_success)
             isCancelable = false
-            positiveButton(getString(R.string.btn_ok)){dialog->
+            positiveButton(getString(R.string.btn_ok)) { dialog ->
                 //clear the edit text
                 txt_title.text?.clear()
                 txt_body.text?.clear()
@@ -110,28 +104,26 @@ class TaskFragment : Fragment() {
         }.show()
     }
 
-    private fun unSuccessFulDialog(){
+    private fun unSuccessFulDialog() {
         alert {
             title = getString(R.string.title_un_successful_dialog)
             message = getString(R.string.msg_add_post_un_successful)
             isCancelable = false
-            positiveButton(getString(R.string.btn_ok)){dialog->
+            positiveButton(getString(R.string.btn_ok)) { dialog ->
                 dialog.dismiss()
             }
         }.show()
     }
 
-    private fun errorDialog(errorMsg: String){
+    private fun errorDialog(errorMsg: String) {
         alert {
             title = getString(R.string.title_error_dialog)
             message = errorMsg
             isCancelable = false
-            positiveButton(getString(R.string.btn_ok)){dialog->
+            positiveButton(getString(R.string.btn_ok)) { dialog ->
                 dialog.dismiss()
             }
         }.show()
 
     }
-
-
 }

@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
 
         //login
-        btn_login.onClick {prepareLogin() }
+        btn_login.onClick { prepareLogin() }
 
         // lunch the signup activity
         tv_signup.onClick { lunchSignUpActivity() }
@@ -45,37 +45,35 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun lunchSignUpActivity(){
+    private fun lunchSignUpActivity() {
 
         startActivity(intentFor<SignUpActivity>())
     }
 
-    private fun prepareLogin(){
+    private fun prepareLogin() {
         val email = txt_userId.text.toString()
         val password = txt_password.text.toString()
 
-        if (!Validator.validateEmail(email)){
+        if (!Validator.validateEmail(email)) {
             alert {
                 isCancelable = false
                 title = getString(R.string.validator_title)
                 message = getString(R.string.validation_email_failed)
-                positiveButton("OK"){
+                positiveButton("OK") {
                     it.dismiss()
                 }
             }.show()
-        }
-        else if (!Validator.validatePassword(password)){
+        } else if (!Validator.validatePassword(password)) {
             alert {
                 isCancelable = false
                 title = getString(R.string.validator_title)
                 message = getString(R.string.validation_password_failed)
-                positiveButton("OK"){
+                positiveButton("OK") {
                     it.dismiss()
                 }
             }.show()
-        }
-        else {
-            val loginRequest = LoginRequest(email,password)
+        } else {
+            val loginRequest = LoginRequest(email, password)
 
             login(loginRequest)
         }
@@ -115,23 +113,22 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun login(login_request: LoginRequest){
+    private fun login(login_request: LoginRequest) {
         viewModel.doLogin(login_request)
     }
 
 
-    private fun observer(){
+    private fun observer() {
         viewModel.isError.observe(this, Observer {
             errorDialog(it)
         })
 
         viewModel.isSuccess.observe(this, Observer {
-            if (it){
+            if (it) {
                 finish()
                 startActivity(intentFor<MainActivity>())
 
-            }
-            else {
+            } else {
                 unSuccessFulDialog()
             }
 
@@ -143,26 +140,27 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    private fun unSuccessFulDialog(){
+    private fun unSuccessFulDialog() {
         alert {
             title = getString(R.string.title_un_successful_dialog)
             message = viewModel.errorMsg.value.toString()
             isCancelable = false
-            positiveButton(getString(R.string.btn_ok)){dialog->
+            positiveButton(getString(R.string.btn_ok)) { dialog ->
                 dialog.dismiss()
             }
         }.show()
     }
 
-    private fun errorDialog(errorMsg: String){
+    private fun errorDialog(errorMsg: String) {
         alert {
             title = getString(R.string.title_error_dialog)
             message = errorMsg
             isCancelable = false
-            positiveButton(getString(R.string.btn_ok)){dialog->
+            positiveButton(getString(R.string.btn_ok)) { dialog ->
                 dialog.dismiss()
             }
         }.show()
 
     }
 }
+

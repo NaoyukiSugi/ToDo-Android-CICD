@@ -20,14 +20,14 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     private val networkService = Networking.create(BuildConfig.BASE_URL)
     private var userProfileRepository: UserProfileRepository
-    private var sharedPreferences = application.getSharedPreferences(BuildConfig.PREF_NAME, Context.MODE_PRIVATE)
+    private var sharedPreferences =
+        application.getSharedPreferences(BuildConfig.PREF_NAME, Context.MODE_PRIVATE)
     private var appPreferences: AppPreferences
     private var token: String
     private var userId: String
     val loading: MutableLiveData<Boolean> = MutableLiveData()
     lateinit var profile: UserProfileResponse
     val imageUrl: MutableLiveData<String> = MutableLiveData()
-
 
     init {
         userProfileRepository = UserProfileRepository(networkService)
@@ -39,8 +39,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun getUserProfile() = liveData {
         try {
             loading.postValue(true)
-            val data = userProfileRepository.getUserProfile(token,userId)
-            if (data.code() == 200 ){
+            val data = userProfileRepository.getUserProfile(token, userId)
+            if (data.code() == 200) {
                 profile = data.body()!!
 
                 imageUrl.postValue(profile.profileImage)
@@ -49,15 +49,11 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             emit(profile)
             loading.postValue(false)
 
-        }
-        catch (httpException: HttpException){
-            Log.e(TAG,httpException.toString())
+        } catch (httpException: HttpException) {
+            Log.e(TAG, httpException.toString())
 
+        } catch (exception: Exception) {
+            Log.e(TAG, exception.toString())
         }
-        catch (exception: Exception){
-            Log.e(TAG,exception.toString())
-        }
-
     }
-
 }

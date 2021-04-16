@@ -27,15 +27,16 @@ data class TaskResponse(
     @SerializedName("bg_color")
     var bg_color: Int
 
-){
+) {
     companion object {
 
         @JvmStatic
         @BindingAdapter("viewBackground")
-        fun TextView.setBgColor(color: Int?){
-            if (color != null){
-               this.setBackgroundResource(color)
+        fun TextView.setBgColor(color: Int?) {
+            if (color != null) {
+                this.setBackgroundResource(color)
             }
         }
     }
 }
+

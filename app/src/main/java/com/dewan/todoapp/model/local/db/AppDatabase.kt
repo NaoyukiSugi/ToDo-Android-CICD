@@ -8,8 +8,8 @@ import com.dewan.todoapp.model.local.dao.TaskDao
 import com.dewan.todoapp.model.local.db.migration.MIGRATION_2_3
 import com.dewan.todoapp.model.local.entity.TaskEntity
 
-@Database(entities = [TaskEntity::class],version = 3, exportSchema = false)
-abstract class AppDatabase: RoomDatabase() {
+@Database(entities = [TaskEntity::class], version = 3, exportSchema = false)
+abstract class AppDatabase : RoomDatabase() {
 
     abstract fun taskDao(): TaskDao
 
@@ -18,13 +18,13 @@ abstract class AppDatabase: RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-        fun getInstance(context: Context): AppDatabase{
-            synchronized(this){
+        fun getInstance(context: Context): AppDatabase {
+            synchronized(this) {
 
                 var instance = INSTANCE
 
-                if (instance == null){
-                    instance  = Room.databaseBuilder(
+                if (instance == null) {
+                    instance = Room.databaseBuilder(
                         context.applicationContext,
                         AppDatabase::class.java,
                         "task_db"
@@ -34,7 +34,7 @@ abstract class AppDatabase: RoomDatabase() {
                         .build()
                     INSTANCE = instance
                 }
-                return  instance
+                return instance
             }
         }
     }

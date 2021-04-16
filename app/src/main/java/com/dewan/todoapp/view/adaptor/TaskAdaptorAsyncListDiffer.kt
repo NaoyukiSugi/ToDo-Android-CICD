@@ -17,10 +17,10 @@ class TaskAdaptorAsyncListDiffer() :
 
     private lateinit var taskCallBack: TaskCallBack
 
-    private val diffUtilCallback = object : DiffUtil.ItemCallback<TaskEntity>(){
+    private val diffUtilCallback = object : DiffUtil.ItemCallback<TaskEntity>() {
 
         override fun areItemsTheSame(oldItem: TaskEntity, newItem: TaskEntity): Boolean {
-            return  oldItem.id == newItem.id
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: TaskEntity, newItem: TaskEntity): Boolean {
@@ -29,7 +29,7 @@ class TaskAdaptorAsyncListDiffer() :
 
     }
 
-    private val asyncListDiffer = AsyncListDiffer(this,diffUtilCallback)
+    private val asyncListDiffer = AsyncListDiffer(this, diffUtilCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: CustomTaskListViewBinding = DataBindingUtil.inflate(
@@ -66,7 +66,7 @@ class TaskAdaptorAsyncListDiffer() :
         this.taskCallBack = taskCallBack
     }
 
-    fun setDetail(newList: List<TaskEntity>){
+    fun setDetail(newList: List<TaskEntity>) {
         asyncListDiffer.submitList(newList)
     }
 

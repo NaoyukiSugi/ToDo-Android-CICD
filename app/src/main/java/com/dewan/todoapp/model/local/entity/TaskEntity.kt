@@ -38,8 +38,8 @@ data class TaskEntity(
 
         @BindingAdapter("viewBackground")
         @JvmStatic
-        fun TextView.setBgColor(color: Int?){
-            if (color != null){
+        fun TextView.setBgColor(color: Int?) {
+            if (color != null) {
                 this.setBackgroundResource(color)
             }
         }

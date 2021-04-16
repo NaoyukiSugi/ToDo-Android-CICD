@@ -5,7 +5,7 @@ import com.dewan.todoapp.model.local.AppPreferences
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import timber.log.Timber
 
-class ReleaseTree(private val appPreferences: AppPreferences): Timber.Tree() {
+class ReleaseTree(private val appPreferences: AppPreferences) : Timber.Tree() {
 
     companion object {
         const val Priority = "priority"
@@ -23,7 +23,7 @@ class ReleaseTree(private val appPreferences: AppPreferences): Timber.Tree() {
             tag?.let { _ -> it.setCustomKey(Tag, tag) }
             it.log(message)
             t?.let { e -> it.recordException(e) }
-            appPreferences.getUserName()?.let {userId ->
+            appPreferences.getUserName()?.let { userId ->
                 it.setUserId(userId)
             }
         }.sendUnsentReports()

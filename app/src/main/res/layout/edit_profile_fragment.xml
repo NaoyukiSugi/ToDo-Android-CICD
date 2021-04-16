@@ -128,9 +128,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     </ScrollView>
-
 
     <ProgressBar
         android:id="@+id/pb_edit_profile"
@@ -168,7 +166,4 @@
         app:layout_constraintBottom_toBottomOf="@+id/editProfileImage"
         app:layout_constraintStart_toEndOf="@+id/editProfileImage"
         app:srcCompat="@drawable/ic_camera" />
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
