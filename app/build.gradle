@@ -30,7 +30,7 @@ android {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField("String", "BASE_URL", "\"https://todo.binarysolution.biz/\"")
+            buildConfigField("String", "BASE_URL", "\"https://freeapi.rdewan.dev/\"")
             buildConfigField("String", "PREF_NAME", "\"com.dewan.todoapp.pref\"")
 
         }
