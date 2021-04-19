@@ -29,6 +29,7 @@ class SplashViewModel(application: Application) : AndroidViewModel(application) 
     private var appPreferences: AppPreferences
     var token = MutableLiveData<String>()
     var context: Context = application
+    val isNetworkConnected: MutableLiveData<Boolean> = MutableLiveData()
     val progress: MutableLiveData<Boolean> = MutableLiveData()
     val tokenResponse: MutableLiveData<String> = MutableLiveData()
     val errorMsgString: MutableLiveData<String> = MutableLiveData()
@@ -66,9 +67,11 @@ class SplashViewModel(application: Application) : AndroidViewModel(application) 
                         }
                 } else {
                     Timber.d("No internet connection!")
+                    isNetworkConnected.value = false
                 }
             } catch (e: java.lang.Exception) {
                 Timber.e(e)
+
             }
 
         }
