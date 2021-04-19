@@ -18,6 +18,8 @@ import com.dewan.todoapp.util.network.NetworkHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import timber.log.Timber
@@ -102,40 +104,29 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun getMaxIdFromDb() {
-
-        viewModelScope.launch(Dispatchers.Main) {
-
-            launch(Dispatchers.IO) {
-
-                Timber.d("getMaxIdFromDb: ${Thread.currentThread().name}")
-
-                when (val result = taskRepository.getMaxId()) {
-                    is ResultSet.Success -> {
-                        var maxId = 0
-
-                        if (result.data != null) {
-                            maxId = result.data as Int
+        viewModelScope.launch() {
+            Timber.d("getMaxIdFromDb: ${Thread.currentThread().name}")
+            taskRepository.getMaxId()
+                .flowOn(Dispatchers.IO)
+                .collect { result ->
+                    when (result) {
+                        is ResultSet.Loading -> {
+                            progress.value = true
                         }
-                        /*
-                          get the task y id from API
-                         */
-                        getTaskById(maxId.toString())
+                        is ResultSet.Success -> {
+                            // get the task y id from API
+                            getTaskById(result.data.toString())
 
-                        /*
-                        set the max rec id value
-                         */
-                        maxRecId.postValue(maxId.toString())
+                            // set the max rec id value
+                            maxRecId.value = result.data.toString()
 
-                    }
-                    is ResultSet.Error -> {
-                        if (result.error != null) {
-                            errorMsgString.postValue(result.error.localizedMessage)
-                        } else {
-                            errorMsgInt.postValue(result.errorMsg)
+                        }
+                        is ResultSet.Error -> {
+                            progress.value = false
                         }
                     }
+
                 }
-            }
         }
 
     }
@@ -151,45 +142,41 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
             try {
                 if (NetworkHelper.isNetworkConnected(context!!)) {
-                    progress.postValue(true)
 
-                    when (val result = taskRepository.getTaskById(token, maxId)) {
+                    taskRepository.getTaskById(token, maxId)
+                        .flowOn(Dispatchers.IO)
+                        .collect { result ->
+                            when (result) {
+                                is ResultSet.Loading -> {
+                                    progress.value = true
+                                }
+                                is ResultSet.Success -> {
+                                    progress.value = false
 
-                        is ResultSet.Success -> {
+                                    val data = result.data as List<*>
 
-                            val data = result.data as List<*>
+                                    data.let {
+                                        //insert data to local DB
+                                        val taskList = it.filterIsInstance<TaskEntity>()
+                                        val insertResult = taskRepository.insertMany(taskList)
+                                        Timber.d("$insertResult")
 
-                            data.let {
-                                //insert data to local DB
-                                val taskList = it.filterIsInstance<TaskEntity>()
-                                val insertResult = taskRepository.insertMany(taskList)
-                                Timber.d("$insertResult")
-
+                                    }
+                                    /*
+                                    get the task from db
+                                    */
+                                    getTaskFromDb()
+                                }
+                                is ResultSet.Error -> {
+                                    progress.value = false
+                                }
                             }
-                            /*
-                            get the task from db
-                            */
-                            getTaskFromDb()
                         }
-                        is ResultSet.Error -> {
-                            if (result.error != null) {
-                                errorMsgString.postValue(result.error.localizedMessage)
-                            } else {
-                                errorMsgInt.postValue(result.errorMsg)
-                            }
-                        }
-                    }
-
-                    progress.postValue(false)
-
                 } else {
-                    //errorMsgInt.postValue(R.string.error_no_internet_msg)
-                    /*
-                       get the task from db
-                    */
+                    Timber.d("No network connection found!")
+                    // get the task from db
                     getTaskFromDb()
                 }
-
             } catch (error: Exception) {
                 Timber.e(error.message.toString())
             }
@@ -204,24 +191,35 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         coroutineScope {
             Timber.d("getTaskFromDb: ${Thread.currentThread().name}")
 
-            when (val result = taskRepository.getAllTaskFromDb()) {
-
-                is ResultSet.Success -> {
-                    val data = result.data as List<*>
-                    data.let {
-                        val taskList = it.filterIsInstance<TaskEntity>()
-                        taskListFromDb.postValue(taskList)
+            try {
+                taskRepository.getAllTaskFromDbFlow()
+                    .flowOn(Dispatchers.IO)
+                    .collect { result ->
+                        taskListFromDb.value = result
+                        progress.value = false
                     }
-
-                }
-                is ResultSet.Error -> {
-                    if (result.error != null) {
-                        errorMsgString.postValue(result.error.localizedMessage)
-                    } else {
-                        errorMsgInt.postValue(result.errorMsg)
-                    }
-                }
+            } catch (e: Exception) {
+                Timber.e(e)
             }
+
+//            when (val result = taskRepository.getAllTaskFromDb()) {
+//
+//                is ResultSet.Success -> {
+//                    val data = result.data as List<*>
+//                    data.let {
+//                        val taskList = it.filterIsInstance<TaskEntity>()
+//                        taskListFromDb.postValue(taskList)
+//                    }
+//
+//                }
+//                is ResultSet.Error -> {
+//                    if (result.error != null) {
+//                        errorMsgString.postValue(result.error.localizedMessage)
+//                    } else {
+//                        errorMsgInt.postValue(result.errorMsg)
+//                    }
+//                }
+//            }
         }
     }
 }
