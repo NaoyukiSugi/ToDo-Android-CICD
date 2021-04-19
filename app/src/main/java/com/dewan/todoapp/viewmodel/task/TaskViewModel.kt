@@ -45,22 +45,56 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
         token = appPreferences.getAccessToken().toString()
         userId.value = appPreferences.getUserId()
 
-        addAllTaskFromDbs()
+//        addAllTaskFromDbs()
     }
 
-    fun addTaskToDb(taskEntity: TaskEntity) {
+//    fun addTaskToDb(taskEntity: TaskEntity) {
+//        viewModelScope.launch {
+//            addTaskRepository.addTaskToDb(taskEntity)
+//                .flowOn(Dispatchers.IO)
+//                .collect { result ->
+//                    when (result) {
+//                        ResultSet.Loading -> {
+//                            progress.value = true
+//                        }
+//                        is ResultSet.Success -> {
+//                            isSuccess.value = true
+//                            progress.value = false
+//                            Timber.d(result.data.toString())
+//                        }
+//                        is ResultSet.Error -> {
+//                            isError.value = result.error.toString()
+//                            progress.value = false
+//                        }
+//                    }
+//                }
+//        }
+//    }
+
+//    private fun addAllTaskFromDbs() {
+//        viewModelScope.launch {
+//            addTaskRepository.getAllTaskFromDbs()
+//                .flowOn(Dispatchers.IO)
+//                .collect { result ->
+//                    result.forEach { task ->
+//                        Timber.d(task.toString())
+//                    }
+//                }
+//        }
+//    }
+
+    fun addTask(addTaskRequest: AddTaskRequest) {
         viewModelScope.launch {
-            addTaskRepository.addTaskToDb(taskEntity)
+            addTaskRepository.addTask(token, addTaskRequest)
                 .flowOn(Dispatchers.IO)
                 .collect { result ->
                     when (result) {
-                        ResultSet.Loading -> {
+                        is ResultSet.Loading -> {
                             progress.value = true
                         }
                         is ResultSet.Success -> {
-                            isSuccess.value = true
+                            isSuccess.value = result.data as Boolean
                             progress.value = false
-                            Timber.d(result.data.toString())
                         }
                         is ResultSet.Error -> {
                             isError.value = result.error.toString()
@@ -70,32 +104,4 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
                 }
         }
     }
-
-    private fun addAllTaskFromDbs() {
-        viewModelScope.launch {
-            addTaskRepository.getAllTaskFromDbs()
-                .flowOn(Dispatchers.IO)
-                .collect { result ->
-                    result.forEach { task ->
-                        Timber.d(task.toString())
-                    }
-                }
-        }
-    }
-
-//    fun addTask(addTaskRequest: AddTaskRequest) = liveData {
-//        try {
-//            progress.value = true
-//            val data = addTaskRepository.addTask(token, addTaskRequest)
-//            isSuccess.value = data.code() == 201
-//            emit(isSuccess.value)
-//            progress.value = false
-//        } catch (httpException: HttpException) {
-//            Log.e(TAG, httpException.toString())
-//            isError.value = httpException.toString()
-//        } catch (exception: Exception) {
-//            Log.e(TAG, exception.toString())
-//            isError.value = exception.toString()
-//        }
-//    }
 }

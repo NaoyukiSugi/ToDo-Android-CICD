@@ -90,16 +90,17 @@ class TaskRepository(
 
     //suspend fun getAllTaskFromDb() = appDatabase.taskDao().getAllTaskFromDd()
 
-    suspend fun getAllTaskFromDb(): ResultSet<List<TaskEntity>> {
+    suspend fun getAllTaskFromDb(): Flow<ResultSet<List<TaskEntity>>> = flow {
+        emit(ResultSet.Loading)
+        try {
+            emit(ResultSet.Success(appDatabase.taskDao().getAllTaskFromDd()))
 
-        return try {
-            ResultSet.Success(appDatabase.taskDao().getAllTaskFromDd())
         } catch (e: Exception) {
-            return ResultSet.Error(e)
+            emit(ResultSet.Error(e))
         }
     }
 
-    suspend fun getAllTaskFromDbFlow() = appDatabase.taskDao().getAllTaskFromDdFlow()
+    fun getAllTaskFromDbFlow() = appDatabase.taskDao().getAllTaskFromDdFlow()
 
     //suspend fun getMaxId() = appDatabase.taskDao().getMaxTaskId()
 

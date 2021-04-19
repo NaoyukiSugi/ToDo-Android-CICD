@@ -192,11 +192,25 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             Timber.d("getTaskFromDb: ${Thread.currentThread().name}")
 
             try {
-                taskRepository.getAllTaskFromDbFlow()
+                taskRepository.getAllTaskFromDb()
                     .flowOn(Dispatchers.IO)
                     .collect { result ->
-                        taskListFromDb.value = result
-                        progress.value = false
+                        when (result) {
+                            is ResultSet.Loading -> {
+                                progress.value = true
+                            }
+                            is ResultSet.Success -> {
+                                val data = result.data as List<*>
+                                data.let {
+                                    val taskList = it.filterIsInstance<TaskEntity>()
+                                    taskListFromDb.postValue(taskList)
+                                }
+                                progress.value = false
+                            }
+                            is ResultSet.Error -> {
+                                progress.value = false
+                            }
+                        }
                     }
             } catch (e: Exception) {
                 Timber.e(e)
