@@ -38,6 +38,11 @@ class SplashActivity : AppCompatActivity() {
 
     // observer the live data
     private fun observers() {
+        viewModel.isNetworkConnected.observe(this, Observer {
+            if (!it) {
+                showAlertDialog()
+            }
+        })
         viewModel.token.observe(this, Observer {
             if (it.isNullOrEmpty()) {
                 startActivity((intentFor<LoginActivity>()))
@@ -70,7 +75,7 @@ class SplashActivity : AppCompatActivity() {
         })
     }
 
-    fun showAlertDialog() {
+    private fun showAlertDialog() {
         alert {
             isCancelable = false
             title = getString(R.string.error_no_internet)
