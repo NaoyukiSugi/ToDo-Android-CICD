@@ -2,6 +2,7 @@ package com.dewan.todoapp.model.local.dao
 
 import androidx.room.*
 import com.dewan.todoapp.model.local.entity.TaskEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
@@ -20,6 +21,9 @@ interface TaskDao {
 
     @Query("SELECT * FROM task_entity ORDER BY taskId desc")
     suspend fun getAllTaskFromDd(): List<TaskEntity>
+
+    @Query("SELECT * FROM task_entity ORDER BY taskId desc")
+    suspend fun getAllTaskFromDdFlow(): Flow<List<TaskEntity>>
 
     @Query("SELECT MAX(taskId) FROM task_entity")
     suspend fun getMaxTaskId(): Int

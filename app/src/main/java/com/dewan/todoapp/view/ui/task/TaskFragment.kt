@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 
 import com.dewan.todoapp.R
+import com.dewan.todoapp.model.local.entity.TaskEntity
 import com.dewan.todoapp.model.remote.request.todo.AddTaskRequest
 import com.dewan.todoapp.viewmodel.task.TaskViewModel
 import kotlinx.android.synthetic.main.task_fragment.*
@@ -59,11 +60,27 @@ class TaskFragment : Fragment() {
         val note = view.txt_note.text.toString()
         val status = view.spinner_task.selectedItem.toString()
 
-        val addTaskRequest = AddTaskRequest(userId, title, body, note, status)
-        addTask(addTaskRequest)
+//        val addTaskRequest = AddTaskRequest(userId, title, body, note, status)
+//        addTask(addTaskRequest)
+
+        val taskEntity = TaskEntity(
+            taskId = 41,
+            title = title,
+            body = body,
+            note = note,
+            status = status,
+            userId = 2,
+            createdAt = "2020-12-28 00:00:00",
+            updatedAt = "2020-12-28 00:00:00"
+        )
+        addTaskToDb(taskEntity)
     }
 
-    private fun addTask(addTaskRequest: AddTaskRequest) {
+    private fun addTaskToDb(taskEntity: TaskEntity) {
+        viewModel.addTaskToDb(taskEntity)
+    }
+
+/*    private fun addTask(addTaskRequest: AddTaskRequest) {
 
         viewModel.addTask(addTaskRequest).observe(viewLifecycleOwner, Observer {
             if (it!!) {
@@ -72,7 +89,7 @@ class TaskFragment : Fragment() {
                 unSuccessFulDialog()
             }
         })
-    }
+    }*/
 
     private fun observeProgressBar(view: View) {
         viewModel.progress.observe(viewLifecycleOwner, Observer {
@@ -86,6 +103,12 @@ class TaskFragment : Fragment() {
 
         viewModel.isError.observe(viewLifecycleOwner, Observer {
             errorDialog(it)
+        })
+
+        viewModel.isSuccess.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                successDialog()
+            }
         })
     }
 
